@@ -16,10 +16,21 @@ RUN yum -y reinstall glibc-common && \
 
 # install rbenv
 RUN yum -y install \
-    git
+    git \
+    bzip2 \
+    gcc \
+    openssl \
+    openssl-devel \
+    readline-devel
 
 RUN git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
 RUN git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
 
+ENV PATH="~/.rbenv/bin:$PATH" \
+    CONFIGURE_OPTS="--disable-install-rdoc"
+
 RUN echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
 RUN echo 'eval "$(rbenv init -)"' >> ~/.bash_profile
+
+# install ruby
+RUN  rbenv install 2.3.0 && rbenv global 2.3.0
